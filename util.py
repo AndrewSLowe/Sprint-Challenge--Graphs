@@ -35,7 +35,7 @@ def traverse_maze(player):
     # added two initially because I instantly pop one. Probably not good practice.
     # s.push(cur_room) # current, room and direction traveled
 
-    while len(visited_rooms) != len(room_graph):
+    while len(visited_rooms) != 500:
         # Cur room id
 
         if cur_room.id not in visited_rooms:
@@ -67,7 +67,7 @@ def traverse_maze(player):
         # Choose a random direction to travse
             # keep track of forks in the road, so when we get to a dead end we can traverse to an unexplored fork
 
-    return traversal_path
+    return list(traversal_path)
 
     # We are going to somewhat arbitrarily default to W, N, E, then S
     # If we're at an impass where we can go W, then we will go N, and so on.
@@ -102,6 +102,7 @@ if __name__ == "__main__":
     player = Player(world.starting_room)
     trav_path = [x for x in traverse_maze(player)]
     print(trav_path)
+    print('length: ' + str(len(trav_path)))
     # print(len(t))
     # visited_rooms = set()
     # print(player.current_room.get_room_in_direction('n'))

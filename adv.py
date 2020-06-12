@@ -1,7 +1,7 @@
 from room import Room
 from player import Player
 from world import World
-from util import Stack
+from util import traverse_maze
 
 import random
 from ast import literal_eval
@@ -22,70 +22,21 @@ room_graph=literal_eval(open(map_file, "r").read())
 world.load_graph(room_graph)
 
 # Print an ASCII map
-# world.print_rooms()
+world.print_rooms()
 
+player = Player(world.starting_room)
 
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
-
-def traverse_maze(player):
-    # What we will return
-    traversal_path = []  # List of tuples
-    
-    opposite_direction = {'n': 's', 's': 'n', 'e': 'w', 'w': 'e'}
-
-    # rooms we have visited and rooms ahead
-    visited_rooms = set() 
-    s = Stack()
-
-    cur_room = player.current_room
-
-    # added two initially because I instantly pop one. Probably not good practice.
-    # s.push(cur_room) # current, room and direction traveled
-
-    while len(visited_rooms) != len(room_graph):
-        # Cur room id
-
-        if cur_room.id not in visited_rooms:
-            visited_rooms.add(cur_room.id)
-
-        prev_room = cur_room
-
-        # choose a direction
-        for direction in cur_room.get_exits():
-            if cur_room.get_room_in_direction(direction).id not in visited_rooms: 
-                # updates
-                s.push(opposite_direction[direction])
-                player.travel(direction)
-                traversal_path.append(direction)
-                visited_rooms.add(player.current_room.id)
-
-                cur_room = player.current_room
-                break # so we don't actually loop over the other exits. Just the first unexplored
-        
-        # This is what makes us traverse. Means it wasn't updated in loop above.
-        if cur_room == prev_room:
-            direction = s.pop()
-            player.travel(direction)
-            traversal_path.append(direction)
-
-            cur_room = player.current_room
-
-        # Choose a random direction to travse
-            # keep track of forks in the road, so when we get to a dead end we can traverse to an unexplored fork
-    return traversal_path
-    
-player = Player(world.starting_room)
-
-traversal_path = 
+traversal_path = traverse_maze(player)
+# traversal_path = ['n', 's', 's', 'w', 'e', 'n', 'w', 'n', 'w', 'w', 's', 'n', 'w', 's', 's', 's', 's', 's', 's', 's', 's', 's', 's', 's', 's', 'w', 'e', 'n', 'e', 's', 'n', 'e', 's', 's', 's', 'w', 'e', 'n', 'e', 'w', 'n', 'n', 'w', 'w', 'n', 'n', 'n', 'w', 's', 's', 's', 'n', 'n', 'w', 's', 's', 'w', 'e', 'n', 'w', 'e', 'n', 'e', 'n', 'e', 'n', 'n', 'w', 's', 'w', 's', 'w', 's', 'n', 'e', 'n', 'w', 'w', 's', 's', 's', 's', 's', 's', 'e', 'w', 'n', 'e', 'w', 'n', 'n', 'n', 'w', 's', 's', 's', 's', 'n', 'w', 'w', 'e', 'e', 'n', 'w', 'e', 'n', 'w', 'e', 'n', 'w', 'w', 'w', 'e', 'e', 'e', 'e', 'n', 'w', 'w', 'e', 'e', 'n', 'w', 'e', 'e', 'e', 'e', 'n', 'w', 'w', 'n', 's', 'w', 'n', 'w', 'n', 'n', 'w', 'n', 'w', 'e', 'e', 'n', 'n', 's', 'w', 'n', 's', 'w', 'e', 'e', 'e', 'e', 'e', 'n', 'w', 'w', 'e', 'e', 'e', 'n', 'n', 'w', 'n', 'w', 'e', 's', 'w', 'e', 'e', 's', 'w', 'w', 'w', 'n', 'n', 's', 'w', 'n', 'n', 's', 'w', 'w', 'w', 'e', 'e', 'e', 's', 'w', 's', 'n', 'w', 'e', 'e', 'e', 's', 'w', 'e', 'e', 'e', 'e', 'e', 'n', 's', 'e', 'n', 's', 'e', 'n', 's', 'e', 'e', 'n', 'n', 'n', 's', 'w', 'n', 'n', 'n', 'w', 'n', 's', 'w', 'n', 'w', 'e', 's', 'e', 'e', 's', 's', 'w', 'n', 's', 'e', 's', 'w', 'w', 'n', 'n', 'w', 'n', 's', 'e', 's', 's', 'w', 'n', 's', 'w', 'n', 'n', 'n', 'n', 'n', 's', 's', 's', 's', 'w', 'n', 'n', 'n', 'n', 'n', 'n', 's', 's', 'w', 'e', 's', 's', 's', 'w', 'n', 'n', 's', 's', 'w', 'n', 'n', 'n', 's', 's', 'w', 'e', 's', 'w', 'w', 's', 'w', 'e', 'n', 'w', 'e', 'e', 'e', 'e', 'e', 's', 'w', 'w', 'e', 'e', 'e', 's', 'e', 'e', 'e', 'e', 'e', 'e', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'e', 'n', 'w', 'w', 'e', 'e', 's', 'e', 'n', 'e', 'e', 'w', 'w', 's', 's', 's', 's', 'e', 'n', 'n', 'n', 's', 's', 'e', 'n', 'n', 's', 'e', 'n', 'n', 's', 'e', 's', 'n', 'e', 'w', 'w', 's', 'w', 's', 'w', 's', 's', 's', 'w', 'n', 's', 'w', 'e', 'e', 'e', 'w', 'n', 'e', 'n', 'e', 'n', 's', 'e', 'n', 's', 'e', 'w', 'w', 'w', 's', 'e', 'w', 'w', 'n', 'w', 'n', 'n', 'n', 'w', 'w', 's', 's', 's', 'w', 'n', 'n', 's', 'w', 'n', 's', 'e', 's', 'w', 'w', 'n', 'n', 'n', 'n', 's', 's', 's', 'w', 'n', 'n', 'w', 'e', 's', 's', 'e', 's', 'w', 's', 'w', 'e', 'n', 'w', 'n', 's', 'w', 'n', 's', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'n', 'n', 's', 's', 'w', 's', 'e', 'w', 's', 's', 'e', 'e', 'w', 'w', 's', 'w', 'n', 'n', 'w', 'n', 'w', 'e', 'e', 'w', 's', 'e', 's', 's', 'e', 's', 's', 's', 'n', 'w', 's', 'w', 'e', 's', 'e', 's', 's', 's', 's', 's', 's', 's', 's', 's', 'n', 'e', 's', 's', 's', 's', 's', 's', 's', 'n', 'n', 'w', 's', 'n', 'e', 'n', 'n', 'e', 's', 's', 's', 'n', 'n', 'e', 's', 's', 'n', 'n', 'e', 's', 's', 'n', 'n', 'w', 'w', 'n', 'e', 'e', 'n', 'e', 's', 's', 'n', 'n', 'e', 's', 's', 's', 's', 'n', 'n', 'e', 'w', 'n', 'n', 'e', 'w', 'w', 'w', 's', 'w', 'w', 'w', 'n', 'w', 's', 's', 'n', 'n', 'e', 'n', 'n', 'w', 'n', 'n', 'n', 'e', 's', 's', 'n', 'n', 'e', 's', 's', 's', 's', 's', 'e', 'w', 'n', 'n', 'n', 'e', 's', 's', 'e', 'e', 'e', 'e', 'w', 'w', 'w', 'w', 'n', 'e', 'w', 'n', 'w', 'n', 'e', 'n', 'e', 's', 's', 'n', 'n', 'w', 's', 'w', 'n', 'w', 'w', 'n', 'w', 's', 's', 's', 's', 's', 's', 's', 's', 's', 's', 'n', 'n', 'n', 'n', 'n', 'w', 'n', 'n', 'n', 'n', 'n', 'w', 'e', 's', 'w', 'e', 's', 'w', 'w', 's', 'n', 'e', 'e', 's', 'w', 'e', 's', 'w', 'e', 's', 'w', 's', 's', 'n', 'w', 's', 'n', 'e', 'e', 's', 's', 's', 'n', 'n', 'n', 'w', 'n', 'w', 'n', 's', 'e', 'e', 'e', 'n', 'n', 'n', 'n', 'n', 'e', 'n', 'e', 's', 'n', 'w', 'n', 'e', 'w', 'n', 'e', 'n', 'n', 'n', 'n', 'n', 's', 's', 'e', 'n', 'n', 's', 's', 'w', 's', 's', 'e', 'n', 'e', 'n', 'n', 'n', 'n', 's', 's', 's', 'e', 'n', 'n', 'n', 's', 'e', 'n', 'n', 'e', 'n', 's', 'e', 'n', 's', 'e', 'n', 's', 'e', 'w', 'w', 'w', 'w', 's', 's', 'w', 's', 's', 'w', 's', 'w', 's', 'w', 's', 'e', 's', 's', 's', 'n', 'n', 'e', 's', 's', 'e', 'w', 'n', 'e', 'e', 's', 's', 's', 's', 's', 'e', 'e', 'w', 'w', 'n', 'e', 'e', 'w', 'w', 'n', 'e', 'n', 's', 'e', 'w', 'w', 'n', 'n', 'e', 'e', 's', 'n', 'e', 'w', 'w', 'w', 'n', 'e', 'e', 'e', 'w', 'w', 'w', 'w', 'w', 'n', 'w', 'n', 'e', 'n', 'e', 'n', 'e', 'n', 'n', 'e', 'n', 'n', 'e', 'e', 'e', 's', 'n', 'w', 'w', 'w', 's', 's', 'e', 'n', 'e', 'w', 's', 'w', 'w', 's', 'e', 's', 'n', 'e', 's', 'e', 'e', 'e', 's', 'n', 'w', 'w', 'w', 'n', 'e', 'n', 'e', 'w', 's', 'e', 'w', 'w', 'w', 'w', 's', 'w', 's', 'e', 'e', 'e', 'e', 'e', 's', 'n', 'w', 'w', 'w', 'w', 'w', 'w', 's', 'e', 's', 'n', 'e', 's', 'e', 'e', 'e', 'n', 's', 'e', 'w', 'w', 'w', 'w', 'n', 'e', 'e', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'n', 'w', 'w', 'w', 'w', 'w', 'w', 's', 's', 'n', 'w', 's', 'w', 'w', 'w', 's', 'w', 's', 'e', 's', 's', 'w', 'n', 'w', 'e', 's', 'e', 'e', 's', 'w', 'w', 's', 'w', 's', 'n', 'e', 'n', 'e', 'e', 'e', 'e', 'e', 'e', 'n', 'n', 'w', 's', 'w', 'e', 'n', 'w', 'e', 'e', 'n', 'w', 'n', 'w', 'w', 'w', 'e', 'e', 'e', 's', 'w', 'w', 's', 'w', 'n', 's', 'e', 'n', 'e', 'e', 'e', 'n', 'n', 'n', 'e', 'e', 'e', 's', 'w', 's', 'w', 's', 's']
 
 # TRAVERSAL TEST - DO NOT MODIFY
 visited_rooms = set()
 player.current_room = world.starting_room
-visited_rooms.add(player.current_room.get_exits())
+visited_rooms.add(player.current_room)
 
 for move in traversal_path:
-    print(move)
     player.travel(move)
     visited_rooms.add(player.current_room)
 
